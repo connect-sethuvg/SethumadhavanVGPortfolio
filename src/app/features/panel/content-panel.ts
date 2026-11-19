@@ -3,11 +3,12 @@ import { DatePipe } from '@angular/common';
 import { PanelTarget, SECTIONS } from '../../data/models';
 import { EXPERIENCE, PROFILE, SKILL_GROUPS } from '../../data/portfolio.data';
 import { PROJECTS } from '../../data/projects';
+import { AuthButton } from '../../shared/auth-button';
 
 /** Slide-in panel that shows the content behind whatever the visitor interacted with in 3D. */
 @Component({
   selector: 'app-content-panel',
-  imports: [DatePipe],
+  imports: [DatePipe, AuthButton],
   templateUrl: './content-panel.html',
   styleUrl: './content-panel.scss',
   host: {

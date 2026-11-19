@@ -61,6 +61,10 @@
             <button class="btn primary big" (click)="enter()">Enter the gallery</button>
             <button class="btn big" (click)="goTo2D()">View 2D version</button>
           </div>
+          <app-auth-button />
+          @if (visitors.enabled) {
+            <p class="privacy">This site records anonymous visit stats (no names). Signing in is optional.</p>
+          }
         }
       }
     </div>
@@ -88,6 +92,7 @@
         <button class="btn" (click)="audio.toggleMute()">{{ audio.muted() ? '🔇 Sound off' : '🔊 Sound on' }}</button>
         <button class="btn" (click)="resetProgress()">↺ Reset orbs</button>
       </div>
+      <app-auth-button />
       @if (!touch) {
         <p class="hint-line"><kbd>WASD</kbd> move · <kbd>Mouse</kbd> look · <kbd>E</kbd> interact · <kbd>Shift</kbd> sprint</p>
       }

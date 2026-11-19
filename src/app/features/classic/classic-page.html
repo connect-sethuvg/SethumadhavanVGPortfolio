@@ -9,6 +9,7 @@
         <a [href]="'#' + n.id" (click)="scrollTo(n.id, $event)">{{ n.label }}</a>
       }
     </nav>
+    <app-auth-button variant="nav" />
     @if (device.hasWebGL) {
       <button class="btn primary sm" (click)="enter3D()">Enter 3D</button>
     }
@@ -180,10 +181,16 @@
         <a class="btn" [href]="profile.links.resume" download>Download resume</a>
       }
     </div>
+    <div class="say-hi"><app-auth-button /></div>
   </section>
 </main>
 
 <footer class="wrap footer">
   <span>© {{ year }} {{ profile.name }}</span>
-  <span>Built with Angular &amp; Three.js</span>
+  <span>
+    Built with Angular &amp; Three.js
+    @if (visitors.enabled) {
+      · Anonymous visit stats are recorded; signing in is optional.
+    }
+  </span>
 </footer>

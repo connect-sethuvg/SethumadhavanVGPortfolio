@@ -1,0 +1,161 @@
+<header class="top">
+  <div class="wrap top-inner">
+    <a routerLink="/classic" class="brand"><span class="logo">SM</span> Visitors</a>
+    @if (visitorsSvc.profile(); as p) {
+      <span class="me">{{ p.email }}</span>
+      <button class="btn sm" (click)="signOut()">Sign out</button>
+    }
+  </div>
+</header>
+
+<main class="wrap">
+  @switch (state()) {
+    @case ('loading') {
+      <p class="muted center">Loading…</p>
+    }
+    @case ('signed-out') {
+      <section class="gate">
+        <h1>Visitor dashboard</h1>
+        <p class="muted">Private. Sign in with an admin Google account ({{ adminEmails.join(', ') }}).</p>
+        <button class="btn primary" (click)="signIn()">Sign in with Google</button>
+      </section>
+    }
+    @case ('forbidden') {
+      <section class="gate">
+        <h1>Not authorized</h1>
+        <p class="muted">{{ visitorsSvc.profile()?.email }} is not in the admin list.</p>
+        <button class="btn" (click)="signOut()">Sign out</button>
+      </section>
+    }
+    @case ('error') {
+      <section class="gate">
+        <h1>Dashboard unavailable</h1>
+        <p class="muted">{{ error() }}</p>
+      </section>
+    }
+    @case ('ready') {
+      <div class="head">
+        <h1>Visitors</h1>
+        <div class="head-actions">
+          <button class="btn sm" (click)="refresh()">↻ Refresh</button>
+          <button class="btn sm" (click)="exportCsv()">Export CSV</button>
+        </div>
+      </div>
+
+      <section class="tiles">
+        <div class="tile"><span class="tile-label">Total visits</span><span class="tile-value">{{ stats().total }}</span></div>
+        <div class="tile"><span class="tile-label">Unique visitors</span><span class="tile-value">{{ stats().unique }}</span></div>
+        <div class="tile"><span class="tile-label">Signed in</span><span class="tile-value">{{ stats().signedIn }}</span></div>
+        <div class="tile"><span class="tile-label">Today</span><span class="tile-value">{{ stats().today }}</span></div>
+      </section>
+
+      <section class="card">
+        <h2>Visits per day <span class="muted small">· last 14 days</span></h2>
+        <div class="chart" (mouseleave)="hovered.set(null)">
+          <div class="y-axis">
+            <span>{{ maxDay() }}</span>
+            <span>{{ maxDay() / 2 }}</span>
+            <span>0</span>
+          </div>
+          <div class="plot">
+            <div class="grid"><span></span><span></span><span></span></div>
+            @for (d of days(); track d.date) {
+              <div class="col" (mouseenter)="hovered.set(d)" [attr.aria-label]="d.date + ': ' + d.count + ' visits'">
+                <div class="bar" [style.height.%]="(d.count / maxDay()) * 100" [class.empty]="!d.count"></div>
+                <span class="x">{{ d.label }}</span>
+              </div>
+            }
+            @if (hovered(); as h) {
+              <div class="tooltip"><b>{{ h.count }}</b> visit{{ h.count === 1 ? '' : 's' }} · {{ h.date }}</div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="breakdowns">
+        @for (b of breakdowns(); track b.title) {
+          <div class="card">
+            <h2>{{ b.title }}</h2>
+            @for (r of b.rows; track r.label) {
+              <div class="row">
+                <span class="row-label" [title]="r.label">{{ r.label }}</span>
+                <span class="row-track"><span class="row-fill" [style.width.%]="r.pct"></span></span>
+                <span class="row-value">{{ r.count }}</span>
+              </div>
+            } @empty {
+              <p class="muted small">No data yet.</p>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="card">
+        <h2>People who said hi <span class="muted small">· {{ people().length }}</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Via</th><th>Visits</th><th>First seen</th><th>Last seen</th></tr>
+            </thead>
+            <tbody>
+              @for (p of people(); track p.uid) {
+                <tr>
+                  <td class="person">
+                    @if (p.photo) {
+                      <img [src]="p.photo" alt="" referrerpolicy="no-referrer" />
+                    }
+                    {{ p.name || '—' }}
+                  </td>
+                  <td>
+                    @if (p.email) {
+                      <a [href]="'mailto:' + p.email">{{ p.email }}</a>
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td>{{ p.provider.replace('.com', '') }}</td>
+                  <td class="num">{{ p.visits }}</td>
+                  <td>{{ p.firstSeen | date: 'MMM d, y, h:mm a' }}</td>
+                  <td>{{ p.lastSeen | date: 'MMM d, y, h:mm a' }}</td>
+                </tr>
+              } @empty {
+                <tr><td colspan="6" class="muted">Nobody has signed in yet.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Recent visits <span class="muted small">· latest {{ visits().length }}</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Time</th><th>Visitor</th><th>Mode</th><th>Device</th><th>Came from</th><th>Timezone</th><th>Language</th></tr>
+            </thead>
+            <tbody>
+              @for (v of visits().slice(0, 200); track v.id) {
+                <tr>
+                  <td>{{ v.at | date: 'MMM d, h:mm a' }}</td>
+                  <td>
+                    @if (visitorName(v.uid); as n) {
+                      <b>{{ n }}</b>
+                    } @else {
+                      <span class="muted">Anonymous · {{ v.uid.slice(0, 6) }}</span>
+                    }
+                  </td>
+                  <td>{{ v.mode.toUpperCase() }}</td>
+                  <td>{{ v.device }}</td>
+                  <td>{{ v.referrer || '—' }}</td>
+                  <td>{{ v.tz }}</td>
+                  <td>{{ v.lang }}</td>
+                </tr>
+              } @empty {
+                <tr><td colspan="7" class="muted">No visits recorded yet.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
+</main>

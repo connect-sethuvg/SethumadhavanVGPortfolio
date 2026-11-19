@@ -30,5 +30,10 @@ export const routes: Routes = [
     title: 'Sethu Madhavan V G · Software Developer',
     loadComponent: () => import('./features/classic/classic-page').then((m) => m.ClassicPage),
   },
+  {
+    path: 'admin',
+    title: 'Visitors · Admin',
+    loadComponent: () => import('./features/admin/admin-page').then((m) => m.AdminPage),
+  },
   { path: '**', redirectTo: '' },
 ];

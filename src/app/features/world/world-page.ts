@@ -6,6 +6,8 @@ import { AudioService } from '../../core/audio.service';
 import { DeviceService } from '../../core/device.service';
 import { ProgressService } from '../../core/progress.service';
 import { clear3DOptIn } from '../../core/mode';
+import { VisitorService } from '../../core/visitor.service';
+import { AuthButton } from '../../shared/auth-button';
 import { MapMarker, PortfolioWorld } from '../../three/portfolio-world';
 import { ContentPanel } from '../panel/content-panel';
 import { confettiBurst } from '../../shared/confetti';
@@ -23,7 +25,7 @@ interface Toast {
 
 @Component({
   selector: 'app-world-page',
-  imports: [Hud, ContentPanel, TouchControls],
+  imports: [Hud, ContentPanel, TouchControls, AuthButton],
   templateUrl: './world-page.html',
   styleUrl: './world-page.scss',
   host: { '(window:keydown)': 'onKey($event)' },
@@ -33,6 +35,7 @@ export class WorldPage implements AfterViewInit, OnDestroy {
   protected readonly device = inject(DeviceService);
   protected readonly audio = inject(AudioService);
   protected readonly progress = inject(ProgressService);
+  protected readonly visitors = inject(VisitorService);
   private readonly router = inject(Router);
 
   protected readonly phase = signal<Phase>('loading');
@@ -80,6 +83,7 @@ export class WorldPage implements AfterViewInit, OnDestroy {
       await world.init(this.progress.discovered());
       this.markers.set(world.markers);
       this.phase.set('intro');
+      void this.visitors.trackVisit('3d');
     } catch (err) {
       console.error(err);
       this.phase.set('error');
@@ -136,6 +140,7 @@ export class WorldPage implements AfterViewInit, OnDestroy {
 
   protected openPanel(target: PanelTarget): void {
     this.audio.click();
+    this.visitors.logEvent('open_section', { section: target.section, index: target.index ?? 0 });
     this.panel.set(target);
     this.panelOpenedAt = performance.now();
     this.phase.set('panel');
@@ -178,7 +183,9 @@ export class WorldPage implements AfterViewInit, OnDestroy {
     if (!this.progress.discover(id)) return;
     this.audio.pickup();
     const label = SECTIONS.find((s) => s.id === id)?.label ?? id;
+    this.visitors.logEvent('discover_section', { section: id, found: this.progress.count() });
     if (this.progress.complete()) {
+      this.visitors.logEvent('unlock_achievement', { achievement_id: 'explorer' });
       setTimeout(() => {
         this.audio.achievement();
         confettiBurst();

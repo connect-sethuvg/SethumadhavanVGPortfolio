@@ -31,6 +31,25 @@ New public repos that aren't curated show up automatically (using the repo descr
 - `src/app/features/classic/`: the 2D page.
 - `src/app/core/`: progress (localStorage), synthesized Web Audio sounds, device detection.
 
+## Visitor tracking & sign-in (Firebase)
+
+- Every visitor is counted anonymously: one record per session with 3D/2D mode, referrer site, timezone, language and device. No names are recorded.
+- Visitors can optionally **Sign in with Google or GitHub** ("Say hi 👋"), and then you see their name and email.
+- **`/admin`** is a private dashboard (Google sign-in, restricted to `ADMIN_EMAILS`). It shows totals, visits per day, referrers, timezones, the people who signed in, recent visits, and a CSV export. Your own visits aren't counted.
+- Until it's configured, all of this is switched off and the site behaves as before.
+
+### One-time setup (about 10 minutes)
+
+1. **Create a project** at https://console.firebase.google.com and click **Add app → Web**. Copy the config values into `src/app/core/firebase.config.ts`.
+2. In **Authentication → Sign-in method**, enable:
+   - **Anonymous**
+   - **Google**
+   - **GitHub**: create an OAuth app at https://github.com/settings/developers with the callback URL Firebase shows, then paste its Client ID and Client secret into Firebase.
+3. In **Authentication → Settings → Authorized domains**, add `connect-sethuvg.github.io`. `localhost` is already there.
+4. Go to **Firestore Database → Create database** (production mode). Then open **Rules**, paste the contents of [`firestore.rules`](firestore.rules) and click **Publish**.
+5. Make sure the admin email in `firebase.config.ts` **and** in `firestore.rules` is the Google account you'll use for `/admin`.
+6. Optional: enable **Google Analytics** in the Firebase project and copy `measurementId` into the config. That adds country/city and in-game events (sections opened and discovered, achievement unlocked).
+
 ## Deploy
 
 `.github/workflows/deploy.yml` builds on every push to `main` (and weekly, so repo data stays fresh) and publishes to GitHub Pages at `https://<user>.github.io/<repo>/`. In the repo settings, set **Pages → Source** to **GitHub Actions**.

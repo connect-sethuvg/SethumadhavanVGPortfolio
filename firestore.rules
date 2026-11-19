@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Paste into Firebase console → Firestore Database → Rules (or `firebase deploy --only firestore:rules`).
+// Visitors can only append their own visit and write their own profile; only the admin can read.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Keep in sync with ADMIN_EMAILS in src/app/core/firebase.config.ts.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.get('email_verified', false) == true
+        && request.auth.token.get('email', '') in ['sethuvalanchery@gmail.com'];
+    }
+
+    function shortString(v, max) {
+      return v is string && v.size() <= max;
+    }
+
+    // One document per visitor session.
+    match /visits/{visitId} {
+      allow read: if isAdmin();
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['uid', 'at', 'mode', 'path', 'referrer', 'lang', 'tz', 'screen', 'device'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.at == request.time
+        && request.resource.data.mode in ['3d', '2d']
+        && request.resource.data.device in ['mobile', 'desktop']
+        && shortString(request.resource.data.path, 200)
+        && shortString(request.resource.data.referrer, 200)
+        && shortString(request.resource.data.lang, 32)
+        && shortString(request.resource.data.tz, 64)
+        && shortString(request.resource.data.screen, 32);
+      allow update, delete: if false;
+    }
+
+    // Profiles of visitors who chose to sign in with Google/GitHub.
+    match /visitors/{uid} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'email', 'photo', 'provider', 'firstSeen', 'lastSeen', 'visits'])
+        && request.resource.data.uid == uid
+        && request.resource.data.email == request.auth.token.get('email', '')
+        && request.resource.data.lastSeen == request.time
+        && request.resource.data.visits is int
+        && shortString(request.resource.data.name, 120)
+        && shortString(request.resource.data.photo, 500)
+        && shortString(request.resource.data.provider, 40);
+      allow delete: if false;
+    }
+  }
+}

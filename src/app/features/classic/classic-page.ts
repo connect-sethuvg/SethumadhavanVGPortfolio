@@ -1,15 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { EXPERIENCE, PROFILE, SKILL_GROUPS } from '../../data/portfolio.data';
 import { PROJECTS } from '../../data/projects';
 import { DeviceService } from '../../core/device.service';
 import { optInto3D } from '../../core/mode';
+import { VisitorService } from '../../core/visitor.service';
+import { AuthButton } from '../../shared/auth-button';
 
 /** Minimal one-page version of the portfolio: the default on phones, and always one click away. */
 @Component({
   selector: 'app-classic-page',
-  imports: [DatePipe],
+  imports: [DatePipe, AuthButton],
   templateUrl: './classic-page.html',
   styleUrl: './classic-page.scss',
   host: { class: 'theme-auto' },
@@ -30,6 +32,12 @@ export class ClassicPage {
     { id: 'contact', label: 'Contact' },
   ];
   private readonly router = inject(Router);
+  protected readonly visitors = inject(VisitorService);
+
+  constructor() {
+    // Load Firebase after first paint so it never delays the page.
+    afterNextRender(() => setTimeout(() => void this.visitors.trackVisit('2d'), 300));
+  }
 
   protected scrollTo(id: string, e: Event): void {
     e.preventDefault();
