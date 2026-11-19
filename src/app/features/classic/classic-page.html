@@ -1,0 +1,189 @@
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" (click)="scrollTo('top', $event)">
+      <span class="logo">SM</span>
+      <span class="brand-name">{{ profile.shortName }}</span>
+    </a>
+    <nav aria-label="Sections">
+      @for (n of nav; track n.id) {
+        <a [href]="'#' + n.id" (click)="scrollTo(n.id, $event)">{{ n.label }}</a>
+      }
+    </nav>
+    @if (device.hasWebGL) {
+      <button class="btn primary sm" (click)="enter3D()">Enter 3D</button>
+    }
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <span class="eyebrow">Hello, I'm</span>
+    <h1>{{ profile.name }}</h1>
+    <p class="hero-title">{{ profile.title }}</p>
+    <p class="hero-tagline">{{ profile.tagline }}</p>
+    <p class="hero-meta">📍 {{ profile.location }}</p>
+    <div class="actions">
+      <a class="btn primary" href="#projects" (click)="scrollTo('projects', $event)">View projects</a>
+      <a class="btn" href="#contact" (click)="scrollTo('contact', $event)">Contact me</a>
+      @if (device.hasWebGL) {
+        <button class="btn ghost" (click)="enter3D()">
+          ✦ Explore the 3D gallery{{ device.isTouch ? ' (best on desktop)' : '' }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <section id="about" class="wrap section">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="prose">
+        @for (p of profile.summary; track $index) {
+          <p>{{ p }}</p>
+        }
+      </div>
+      <aside class="side">
+        <div class="card">
+          <span class="label">Education</span>
+          <strong>{{ profile.education.degree }}</strong>
+          <span>{{ profile.education.school }}</span>
+          <span class="muted">{{ profile.education.university }}</span>
+        </div>
+        <div class="card">
+          <span class="label">Languages</span>
+          <div class="chips">
+            @for (l of profile.languagesSpoken; track l) {
+              <span class="chip">{{ l }}</span>
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="skills" class="wrap section">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>Skills</h2>
+    </div>
+    <div class="skills-grid">
+      @for (g of skillGroups; track g.title) {
+        <div class="card skill-card">
+          <h3>{{ g.title }}</h3>
+          <div class="chips">
+            @for (s of g.skills; track s) {
+              <span class="chip">{{ s }}</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section id="experience" class="wrap section">
+    <div class="section-head">
+      <span class="num">03</span>
+      <h2>Experience</h2>
+    </div>
+    <ol class="timeline">
+      @for (e of experience; track e.company) {
+        <li [class.current]="e.end === 'Present'">
+          <span class="dates">{{ e.start }} — {{ e.end }}</span>
+          <h3>{{ e.role }}</h3>
+          <p class="company">{{ e.company }}{{ e.location ? ', ' + e.location : '' }}</p>
+          @if (e.project) {
+            <p class="muted">Project: {{ e.project }}</p>
+          }
+          <p>{{ e.summary }}</p>
+          <details>
+            <summary>Highlights</summary>
+            <ul>
+              @for (h of e.highlights; track h) {
+                <li>{{ h }}</li>
+              }
+            </ul>
+          </details>
+          @if (e.tech.length) {
+            <div class="chips">
+              @for (t of e.tech; track t) {
+                <span class="chip">{{ t }}</span>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section id="projects" class="wrap section">
+    <div class="section-head">
+      <span class="num">04</span>
+      <h2>Projects</h2>
+      <a class="head-link" [href]="profile.links.github" target="_blank" rel="noopener">All repos on GitHub ↗</a>
+    </div>
+    <div class="projects-grid">
+      @for (p of projects; track p.title) {
+        <article class="card project">
+          <div class="project-top">
+            @if (p.language) {
+              <span class="lang">{{ p.language }}</span>
+            }
+            @if (p.updated) {
+              <span class="muted small">Updated {{ p.updated | date: 'MMM y' }}</span>
+            }
+          </div>
+          <h3>{{ p.title }}</h3>
+          <p class="tagline">{{ p.tagline }}</p>
+          @if (p.highlights.length) {
+            <ul>
+              @for (h of p.highlights; track h) {
+                <li>{{ h }}</li>
+              }
+            </ul>
+          }
+          <div class="chips">
+            @for (t of p.tech; track t) {
+              <span class="chip">{{ t }}</span>
+            }
+          </div>
+          <div class="links">
+            @if (p.live) {
+              <a [href]="p.live" target="_blank" rel="noopener">Live demo ↗</a>
+            }
+            @for (r of p.repoLinks; track r.url) {
+              <a [href]="r.url" target="_blank" rel="noopener">{{ r.label }} ↗</a>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="contact" class="wrap section contact">
+    <div class="section-head">
+      <span class="num">05</span>
+      <h2>Contact</h2>
+    </div>
+    <p class="contact-title">Let's build something <span>together.</span></p>
+    <p class="muted">I'm open to backend and full-stack .NET roles and to interesting collaborations.</p>
+    <div class="email-row">
+      <a class="email" [href]="'mailto:' + profile.links.email">{{ profile.links.email }}</a>
+      <button class="btn" (click)="copyEmail()">{{ copied() ? 'Copied ✓' : 'Copy' }}</button>
+    </div>
+    <div class="actions">
+      <a class="btn primary" [href]="'mailto:' + profile.links.email">Send an email</a>
+      <a class="btn" [href]="profile.links.linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn" [href]="profile.links.github" target="_blank" rel="noopener">GitHub ↗</a>
+      @if (profile.links.resume) {
+        <a class="btn" [href]="profile.links.resume" download>Download resume</a>
+      }
+    </div>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <span>© {{ year }} {{ profile.name }}</span>
+  <span>Built with Angular &amp; Three.js</span>
+</footer>

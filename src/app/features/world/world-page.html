@@ -1,0 +1,105 @@
+<canvas #canvas class="scene" [class.blurred]="phase() === 'intro' || phase() === 'paused' || phase() === 'loading'"></canvas>
+
+@if (phase() === 'playing' || phase() === 'panel' || phase() === 'paused') {
+  <app-hud
+    [hoverLabel]="phase() === 'playing' ? hoverLabel() : null"
+    [markers]="markers()"
+    [touch]="touch"
+    (switch2D)="goTo2D()"
+    (help)="pause()"
+  />
+}
+
+@if (touch && phase() === 'playing') {
+  <app-touch-controls
+    [canInteract]="!!hoverLabel()"
+    (move)="touchMove($event)"
+    (look)="touchLook($event)"
+    (interact)="touchInteract()"
+  />
+}
+
+@if (panel(); as target) {
+  <app-content-panel [target]="target" (closed)="closePanel()" (navigate)="panel.set($event)" />
+}
+
+@if (phase() === 'loading' || phase() === 'intro' || phase() === 'error') {
+  <section class="overlay intro">
+    <div class="card">
+      <span class="eyebrow">Interactive portfolio</span>
+      <h1>{{ profile.name }}</h1>
+      <p class="title">{{ profile.title }}</p>
+      <p class="tagline">{{ profile.tagline }}</p>
+
+      @switch (phase()) {
+        @case ('loading') {
+          <div class="loader" role="progressbar" [attr.aria-valuenow]="loadProgress() * 100" aria-valuemin="0" aria-valuemax="100">
+            <div class="bar" [style.width.%]="loadProgress() * 100"></div>
+          </div>
+          <p class="load-msg">{{ loadMessage() }}…</p>
+        }
+        @case ('error') {
+          <p class="load-msg">The 3D gallery could not start on this device.</p>
+          <button class="btn primary big" (click)="goTo2D()">Open the 2D portfolio</button>
+        }
+        @default {
+          <div class="controls">
+            @if (touch) {
+              <div><span class="key-icon">◉</span> Left thumb: move</div>
+              <div><span class="key-icon">☝</span> Drag: look around</div>
+              <div><span class="key-icon">●</span> Tap <b>Open</b> on glowing things</div>
+            } @else {
+              <div><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span> Move</div>
+              <div><span class="keys"><kbd>Mouse</kbd></span> Look around</div>
+              <div><span class="keys"><kbd>E</kbd></span>/<span class="keys"><kbd>Click</kbd></span> Interact</div>
+              <div><span class="keys"><kbd>Shift</kbd></span> Sprint · <kbd>Space</kbd> Jump</div>
+              <div><span class="keys"><kbd>Esc</kbd></span> Pause / menu</div>
+            }
+          </div>
+          <p class="goal">🎯 Find the <b>5 glowing orbs</b> to discover every section.</p>
+          <div class="actions">
+            <button class="btn primary big" (click)="enter()">Enter the gallery</button>
+            <button class="btn big" (click)="goTo2D()">View 2D version</button>
+          </div>
+        }
+      }
+    </div>
+  </section>
+}
+
+@if (phase() === 'paused') {
+  <section class="overlay pause" (click)="resume()">
+    <div class="card" (click)="$event.stopPropagation()">
+      <span class="eyebrow">Paused</span>
+      <h2>Take a breather</h2>
+      <p class="tagline">
+        {{ progress.count() }}/{{ progress.total }} sections discovered.
+        @if (!progress.complete()) {
+          Keep exploring to find the rest.
+        } @else {
+          You found everything!
+        }
+      </p>
+      <div class="actions">
+        <button class="btn primary big" (click)="resume()">Resume</button>
+        <button class="btn big" (click)="goTo2D()">2D version</button>
+      </div>
+      <div class="actions small">
+        <button class="btn" (click)="audio.toggleMute()">{{ audio.muted() ? '🔇 Sound off' : '🔊 Sound on' }}</button>
+        <button class="btn" (click)="resetProgress()">↺ Reset orbs</button>
+      </div>
+      @if (!touch) {
+        <p class="hint-line"><kbd>WASD</kbd> move · <kbd>Mouse</kbd> look · <kbd>E</kbd> interact · <kbd>Shift</kbd> sprint</p>
+      }
+    </div>
+  </section>
+}
+
+<div class="toasts" aria-live="polite">
+  @for (t of toasts(); track t.id) {
+    <div class="toast" [class.big]="t.big">
+      <strong>{{ t.title }}</strong>
+      <span>{{ t.text }}</span>
+    </div>
+  }
+</div>
