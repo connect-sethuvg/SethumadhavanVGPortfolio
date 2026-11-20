@@ -49,7 +49,7 @@ export const GITHUB_REPOS: GithubRepo[] = [
   {
     "name": "sonnetDetails",
     "description": "Will find the details of sonnet new cars ! ",
-    "readme": "",
+    "readme": "Premium React microsite for exploring Kia Sonet variants, Kerala on-road pricing, and comparisons.",
     "language": "TypeScript",
     "stars": 0,
     "url": "https://github.com/connect-sethuvg/sonnetDetails",
@@ -60,7 +60,7 @@ export const GITHUB_REPOS: GithubRepo[] = [
   {
     "name": "llmAutoInvoice-processor-",
     "description": "",
-    "readme": "",
+    "readme": "Fully local, automated invoice processing pipeline powered by Ollama. Replaces a 10–15 minute manual workflow with a ~30-second script run.",
     "language": "Python",
     "stars": 0,
     "url": "https://github.com/connect-sethuvg/llmAutoInvoice-processor-",

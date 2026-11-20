@@ -52,4 +52,10 @@ New public repos that aren't curated show up automatically (using the repo descr
 
 ## Deploy
 
-`.github/workflows/deploy.yml` builds on every push to `main` (and weekly, so repo data stays fresh) and publishes to GitHub Pages at `https://<user>.github.io/<repo>/`. In the repo settings, set **Pages → Source** to **GitHub Actions**.
+The site is hosted on **Azure Static Web Apps (Free plan)** at https://yellow-pond-092dad110.azurestaticapps.net.
+
+- `.github/workflows/azure-static-web-apps-*.yml` builds with Node 24 and deploys on every push to `main`, plus a weekly rebuild so repo data stays fresh. Pull requests get preview URLs.
+- `public/staticwebapp.config.json` rewrites deep links (`/classic`, `/admin`) to `index.html` and sets the cache headers.
+- The deploy token is the repo secret `AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_POND_092DAD110`, which Azure created.
+- **Custom domain:** in the Azure portal, open Static Web App → **Custom domains → Add**, then add the CNAME/TXT records it shows at your DNS provider. Azure issues HTTPS for free.
+- `.github/workflows/deploy.yml` (GitHub Pages) is a manual-only backup.

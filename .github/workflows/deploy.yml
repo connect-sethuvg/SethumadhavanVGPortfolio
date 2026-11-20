@@ -1,12 +1,9 @@
 name: Deploy to GitHub Pages
 
+# The site is hosted on Azure Static Web Apps (see azure-static-web-apps-*.yml).
+# This GitHub Pages deploy is kept as a manual backup only.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-  schedule:
-    # Weekly rebuild so new public GitHub repos appear automatically.
-    - cron: '0 3 * * 1'
 
 permissions:
   contents: read
