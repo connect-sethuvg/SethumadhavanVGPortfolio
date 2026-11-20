@@ -52,7 +52,7 @@ New public repos that aren't curated show up automatically (using the repo descr
 
 ## Deploy
 
-The site is hosted on **Azure Static Web Apps (Free plan)** at https://yellow-pond-092dad110.azurestaticapps.net.
+The site is hosted on **Azure Static Web Apps (Free plan)** at https://yellow-pond-092dad110.8.azurestaticapps.net.
 
 - `.github/workflows/azure-static-web-apps-*.yml` builds with Node 24 and deploys on every push to `main`, plus a weekly rebuild so repo data stays fresh. Pull requests get preview URLs.
 - `public/staticwebapp.config.json` rewrites deep links (`/classic`, `/admin`) to `index.html` and sets the cache headers.
