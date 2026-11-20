@@ -45,7 +45,7 @@ New public repos that aren't curated show up automatically (using the repo descr
    - **Anonymous**
    - **Google**
    - **GitHub**: create an OAuth app at https://github.com/settings/developers with the callback URL Firebase shows, then paste its Client ID and Client secret into Firebase.
-3. In **Authentication → Settings → Authorized domains**, add `connect-sethuvg.github.io`. `localhost` is already there.
+3. In **Authentication → Settings → Authorized domains**, add `sethumadhavan.is-a.dev` and `yellow-pond-092dad110.8.azurestaticapps.net`. `localhost` is already there.
 4. Go to **Firestore Database → Create database** (production mode). Then open **Rules**, paste the contents of [`firestore.rules`](firestore.rules) and click **Publish**.
 5. Make sure the admin email in `firebase.config.ts` **and** in `firestore.rules` is the Google account you'll use for `/admin`.
 6. Optional: enable **Google Analytics** in the Firebase project and copy `measurementId` into the config. That adds country/city and in-game events (sections opened and discovered, achievement unlocked).
@@ -57,7 +57,7 @@ The site is hosted on **Azure Static Web Apps (Free plan)** at https://yellow-po
 - `.github/workflows/azure-static-web-apps-*.yml` builds with Node 24 and deploys on every push to `main`, plus a weekly rebuild so repo data stays fresh. Pull requests get preview URLs.
 - `public/staticwebapp.config.json` rewrites deep links (`/classic`, `/admin`) to `index.html` and sets the cache headers.
 - The deploy token is the repo secret `AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_POND_092DAD110`, which Azure created.
-- **Custom domain:** in the Azure portal, open Static Web App → **Custom domains → Add**, then add the CNAME/TXT records it shows at your DNS provider. Azure issues HTTPS for free.
+- **Custom domain:** `sethumadhavan.is-a.dev` (free, from is-a.dev) with a CNAME to the Azure host. It is added in Azure under Static Web App → **Custom domains**, and Azure issues HTTPS for free. `scripts/postbuild.mjs` switches the canonical/sitemap URL to it automatically once its DNS points at Azure.
 - `.github/workflows/deploy.yml` (GitHub Pages) is a manual-only backup.
 
 ## SEO

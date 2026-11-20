@@ -3,10 +3,28 @@
 //  2. Writes robots.txt and sitemap.xml.
 //  3. Copies index.html to 404.html (GitHub Pages deep-link fallback).
 //
-// Change SITE_URL here (or set the SITE_URL env var) when the site moves to a new domain.
+// The site URL switches to CUSTOM_DOMAIN automatically once its CNAME points at Azure.
+// Override with the SITE_URL env var if needed.
 import { copyFile, readFile, writeFile } from 'node:fs/promises';
+import { resolveCname } from 'node:dns/promises';
 
-const SITE_URL = (process.env.SITE_URL || 'https://yellow-pond-092dad110.8.azurestaticapps.net').replace(/\/+$/, '');
+// Preferred public domain, and the Azure Static Web Apps address it points to.
+const CUSTOM_DOMAIN = 'sethumadhavan.is-a.dev';
+const AZURE_HOST = 'yellow-pond-092dad110.8.azurestaticapps.net';
+
+/** Use the custom domain only once its DNS really points at Azure, so canonical links never break. */
+async function pickSiteUrl() {
+  if (process.env.SITE_URL) return process.env.SITE_URL;
+  try {
+    const targets = await resolveCname(CUSTOM_DOMAIN);
+    if (targets.some((t) => t.replace(/\.$/, '').toLowerCase() === AZURE_HOST)) return `https://${CUSTOM_DOMAIN}`;
+  } catch {
+    // Not registered yet (or offline): fall through.
+  }
+  return `https://${AZURE_HOST}`;
+}
+
+const SITE_URL = (await pickSiteUrl()).replace(/\/+$/, '');
 const PAGES = ['/', '/classic'];
 
 const dir = new URL('../dist/portfolio/browser/', import.meta.url);
