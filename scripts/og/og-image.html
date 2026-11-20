@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+  body{background:radial-gradient(circle at 80% 20%,#1e3a8a 0,#0b1120 55%);color:#f1f5f9;font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;justify-content:center;padding:0 96px;box-sizing:border-box}
+  .logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#60a5fa,#1d4ed8);display:grid;place-items:center;font:700 28px 'Space Grotesk';margin-bottom:40px}
+  .eyebrow{font:600 22px Inter;letter-spacing:.18em;text-transform:uppercase;color:#60a5fa}
+  h1{font:700 92px/1 'Space Grotesk',sans-serif;letter-spacing:-.02em;margin:18px 0 22px}
+  .role{font:600 36px Inter;color:#93c5fd}
+  .stack{margin-top:40px;display:flex;gap:14px;flex-wrap:wrap}
+  .chip{font:600 22px Inter;padding:10px 20px;border-radius:999px;border:1px solid #334155;background:#0f172a;color:#cbd5e1}
+  .cube{position:absolute;right:-40px;top:120px;width:260px;height:260px;border-radius:28px;background:linear-gradient(145deg,#3b82f6,#1e40af);transform:rotate(18deg);box-shadow:0 40px 90px rgba(59,130,246,.45);opacity:.9}
+  .cube2{position:absolute;right:150px;top:420px;width:90px;height:90px;border-radius:16px;background:#60a5fa;transform:rotate(-12deg);opacity:.75}
+  body>*:not(.cube):not(.cube2){position:relative;z-index:1}
+  h1{font-size:84px}
+</style></head>
+<body>
+  <div class="cube"></div><div class="cube2"></div>
+  <div class="logo">SM</div>
+  <div class="eyebrow">Interactive 3D Portfolio</div>
+  <h1>Sethu Madhavan V G</h1>
+  <div class="role">.NET Software Developer · Kerala, India</div>
+  <div class="stack"><span class="chip">C#</span><span class="chip">ASP.NET Core</span><span class="chip">SQL Server</span><span class="chip">Azure</span><span class="chip">Angular</span></div>
+</body></html>

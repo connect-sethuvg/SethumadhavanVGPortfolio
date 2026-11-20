@@ -2,17 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Sethu Madhavan V G · Software Developer</title>
+    <title>Sethu Madhavan V G – .NET Software Developer | Portfolio</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       name="description"
-      content="Portfolio of Sethu Madhavan V G, a .NET software developer. Walk through an interactive 3D gallery of skills, projects and experience."
+      content="Sethu Madhavan V G is a .NET software developer from Kerala, India, building scalable backends with C#, ASP.NET Core, SQL Server and Azure, plus Angular frontends. Explore projects, skills and experience in an interactive 3D portfolio."
     />
+    <meta name="author" content="Sethu Madhavan V G" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#eef1f5" />
-    <meta property="og:title" content="Sethu Madhavan V G · Software Developer" />
-    <meta property="og:description" content="Walk through my interactive 3D portfolio gallery." />
+
+    <!-- __SITE_URL__ is replaced at build time by scripts/postbuild.mjs (see SITE_URL there). -->
+    <link rel="canonical" href="__SITE_URL__/" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="Sethu Madhavan V G" />
+    <meta property="og:title" content="Sethu Madhavan V G – .NET Software Developer" />
+    <meta
+      property="og:description"
+      content="C#, ASP.NET Core, Azure and Angular developer. Walk through my interactive 3D portfolio of projects, skills and experience."
+    />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sethu Madhavan V G – .NET Software Developer portfolio" />
+    <meta property="profile:first_name" content="Sethu Madhavan" />
+    <meta property="profile:last_name" content="V G" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sethu Madhavan V G – .NET Software Developer" />
+    <meta name="twitter:description" content="C#, ASP.NET Core, Azure and Angular developer. Interactive 3D portfolio." />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "__SITE_URL__/#person",
+            "name": "Sethu Madhavan V G",
+            "alternateName": ["Sethu Madhavan", "Sethumadhavan V G", "Sethu VG", "Sethumadhavan"],
+            "jobTitle": "Software Developer (.NET)",
+            "url": "__SITE_URL__/",
+            "image": "__SITE_URL__/og-image.png",
+            "email": "mailto:sethuvalanchery@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Palakkad",
+              "addressRegion": "Kerala",
+              "addressCountry": "IN"
+            },
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "MEA Engineering College, Malappuram"
+            },
+            "knowsAbout": [
+              "C#", ".NET", "ASP.NET Core", "Entity Framework Core", "SQL Server", "Microservices",
+              "RESTful APIs", "Microsoft Azure", "Angular", "TypeScript"
+            ],
+            "sameAs": ["https://linkedin.com/in/sethuvg", "https://github.com/connect-sethuvg"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "__SITE_URL__/#website",
+            "url": "__SITE_URL__/",
+            "name": "Sethu Madhavan V G – Portfolio",
+            "author": { "@id": "__SITE_URL__/#person" }
+          }
+        ]
+      }
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="og-image.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +86,21 @@
   </head>
   <body>
     <app-root></app-root>
-    <noscript>This portfolio needs JavaScript to run.</noscript>
+    <noscript>
+      <main style="font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 16px">
+        <h1>Sethu Madhavan V G</h1>
+        <p><strong>Software Developer (.NET)</strong> · Palakkad, Kerala, India</p>
+        <p>
+          Software developer with 2+ years of experience in C#, ASP.NET Core, .NET, Entity Framework Core, SQL Server
+          and Angular, building microservices and REST APIs and supporting production on Microsoft Azure.
+        </p>
+        <p>
+          <a href="mailto:sethuvalanchery@gmail.com">sethuvalanchery@gmail.com</a> ·
+          <a href="https://linkedin.com/in/sethuvg">LinkedIn</a> ·
+          <a href="https://github.com/connect-sethuvg">GitHub</a>
+        </p>
+        <p>Enable JavaScript to explore the interactive portfolio.</p>
+      </main>
+    </noscript>
   </body>
 </html>

@@ -59,3 +59,10 @@ The site is hosted on **Azure Static Web Apps (Free plan)** at https://yellow-po
 - The deploy token is the repo secret `AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_POND_092DAD110`, which Azure created.
 - **Custom domain:** in the Azure portal, open Static Web App → **Custom domains → Add**, then add the CNAME/TXT records it shows at your DNS provider. Azure issues HTTPS for free.
 - `.github/workflows/deploy.yml` (GitHub Pages) is a manual-only backup.
+
+## SEO
+
+- `src/index.html` holds the title, description, Open Graph/Twitter tags, and Person + WebSite structured data (JSON-LD). A `<noscript>` fallback carries crawlable text.
+- `scripts/postbuild.mjs` stamps **`SITE_URL`** into the canonical/OG/JSON-LD tags and writes `sitemap.xml` and `robots.txt`. **To move to a new domain, change `SITE_URL` there** (or set the `SITE_URL` env var in CI).
+- `src/app/core/seo.service.ts` updates the canonical URL per route, and `/admin` is `noindex`.
+- The share image `public/og-image.png` is rendered from `scripts/og/og-image.html` with headless Chrome.

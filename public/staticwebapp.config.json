@@ -1,7 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/*.{js,css,map,svg,png,jpg,webp,ico,json,txt,woff,woff2,mp3,pdf}"]
+    "exclude": ["/*.{js,css,map,svg,png,jpg,webp,ico,json,txt,xml,woff,woff2,mp3,pdf}"]
   },
   "routes": [
     { "route": "/index.html", "headers": { "cache-control": "no-cache" } },
